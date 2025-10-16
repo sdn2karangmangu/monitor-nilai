@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Nilai Siswa - SDN 2 Karangmangu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+
+        .logo img {
+    width: 90px; /* ubah sesuai ukuran logo */
+    height: 90px;
+    border-radius: 50%; /* opsional, bikin bulat */
+    border: 3px solid white;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .student-info {
+            margin-bottom: 10px;
+        }
+
+        .student-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .student-details {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .nilai-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .nilai-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nilai-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nilai-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .nilai-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .nilai-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .nilai-akhir {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .nilai-akhir-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .nilai-akhir-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .predikat {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .predikat.a { background: #2ecc71; color: white; }
+        .predikat.b { background: #3498db; color: white; }
+        .predikat.c { background: #f39c12; color: white; }
+        .predikat.d { background: #e74c3c; color: white; }
+
+        .btn-back {
+            background: #ecf0f1;
+            color: #2c3e50;
+            margin-top: 20px;
+            box-shadow: none;
+        }
+
+        .btn-back:hover {
+            background: #bdc3c7;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            display: none;
+            background: #ffe5e5;
+            color: #e74c3c;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #e74c3c;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .nilai-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+             <div class="logo">
+        <img src="logo-sekolah.png" alt="Logo SDN 2 Karangmangu">
+    </div>
+            <h1>Cek Nilai Siswa</h1>
+            <div class="subtitle">SDN 2 Karangmangu</div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section" id="searchSection">
+            <div class="info-box">
+                💡 <strong>Info:</strong> Masukkan Nomor Induk Siswa (NIS) untuk melihat nilai
+            </div>
+
+            <div class="input-group">
+                <label for="nisInput">Nomor Induk Siswa (NIS)</label>
+                <input 
+                    type="text" 
+                    id="nisInput" 
+                    placeholder="Contoh: 1234"
+                    autocomplete="off"
+                >
+            </div>
+
+            <button class="btn" onclick="cekNilai()">
+                🔍 Cek Nilai
+            </button>
+
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px; color: #7f8c8d;">Mengambil data...</p>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+            <div class="student-card">
+                <div class="student-info">
+                    <div class="student-name" id="studentName">-</div>
+                    <div class="student-details">
+                        <div>NIS: <strong id="studentNIS">-</strong></div>
+                        <div>Kelas: <strong id="studentClass">-</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nilai-container">
+                <div class="nilai-title">
+                    📊 Rincian Nilai
+                </div>
+
+                <div class="nilai-grid">
+                    <div class="nilai-item">
+                        <div class="nilai-label">Tugas 1</div>
+                        <div class="nilai-value" id="nilaiTugas1">-</div>
+                    </div>
+                    <div class="nilai-item">
+                        <div class="nilai-label">Tugas 2</div>
+                        <div class="nilai-value" id="nilaiTugas2">-</div>
+                    </div>
+                    <div class="nilai-item">
+                        <div class="nilai-label">Ulangan 1</div>
+                        <div class="nilai-value" id="nilaiUlangan1">-</div>
+                    </div>
+                    <div class="nilai-item">
+                        <div class="nilai-label">Ulangan 2</div>
+                        <div class="nilai-value" id="nilaiUlangan2">-</div>
+                    </div>
+                    <div class="nilai-item">
+                        <div class="nilai-label">UTS</div>
+                        <div class="nilai-value" id="nilaiUTS">-</div>
+                    </div>
+                    <div class="nilai-item">
+                        <div class="nilai-label">UAS</div>
+                        <div class="nilai-value" id="nilaiUAS">-</div>
+                    </div>
+                </div>
+
+                <div class="nilai-akhir">
+                    <div class="nilai-akhir-label">Nilai Akhir</div>
+                    <div class="nilai-akhir-value" id="nilaiAkhir">-</div>
+                    <div class="predikat" id="predikat">-</div>
+                </div>
+            </div>
+
+            <button class="btn btn-back" onclick="resetForm()">
+                ← Cari NIS Lain
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // URL Google Apps Script Web App
+        // GANTI DENGAN URL ANDA SETELAH DEPLOY
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxdgo4_vWfTHU9S7uHdGy_OxPUrHTlRy5z9tx_SnKhXQ3GTWwfhu63GPbBd0xqbBfvIw/exec';
+
+        // Data dummy untuk demo (hapus setelah integrasi dengan Google Sheet)
+   
+
+        async function cekNilai() {
+    const nis = document.getElementById('nisInput').value.trim();
+    
+    if (!nis) {
+        showError('Mohon masukkan NIS terlebih dahulu');
+        return;
+    }
+
+    document.getElementById('searchSection').style.display = 'none';
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('errorMessage').style.display = 'none';
+
+    try {
+        const response = await fetch(`${SCRIPT_URL}?nis=${nis}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            tampilkanNilai(data.data);
+        } else {
+            throw new Error(data.message || 'Data tidak ditemukan');
+        }
+    } catch (error) {
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('searchSection').style.display = 'block';
+        showError(error.message);
+    }
+}
+
+
+
+        function tampilkanNilai(siswa) {
+            document.getElementById('loadingSection').style.display = 'none';
+            
+            // Fill data
+            document.getElementById('studentName').textContent = siswa.nama;
+            document.getElementById('studentNIS').textContent = siswa.nis;
+            document.getElementById('studentClass').textContent = siswa.kelas;
+            document.getElementById('nilaiTugas1').textContent = siswa.tugas1;
+            document.getElementById('nilaiTugas2').textContent = siswa.tugas2;
+            document.getElementById('nilaiUlangan1').textContent = siswa.ulangan1;
+            document.getElementById('nilaiUlangan2').textContent = siswa.ulangan2;
+            document.getElementById('nilaiUTS').textContent = siswa.uts;
+            document.getElementById('nilaiUAS').textContent = siswa.uas;
+            document.getElementById('nilaiAkhir').textContent = siswa.nilaiAkhir;
+
+            // Set predikat
+            const predikatEl = document.getElementById('predikat');
+            let predikat, className;
+            
+            if (siswa.nilaiAkhir >= 85) {
+                predikat = 'A - Sangat Baik';
+                className = 'a';
+            } else if (siswa.nilaiAkhir >= 70) {
+                predikat = 'B - Baik';
+                className = 'b';
+            } else if (siswa.nilaiAkhir >= 60) {
+                predikat = 'C - Cukup';
+                className = 'c';
+            } else {
+                predikat = 'D - Perlu Peningkatan';
+                className = 'd';
+            }
+
+            predikatEl.textContent = predikat;
+            predikatEl.className = `predikat ${className}`;
+
+            // Show result
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'block';
+            document.getElementById('nisInput').value = '';
+            document.getElementById('nisInput').focus();
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = '❌ ' + message;
+            errorEl.style.display = 'block';
+        }
+
+        // Enter key support
+        document.getElementById('nisInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                cekNilai();
+            }
+        });
+
+        // Focus input on load
+        window.addEventListener('load', function() {
+            document.getElementById('nisInput').focus();
+        });
+    </script>
+</body>
+</html>
