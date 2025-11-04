@@ -48,34 +48,6 @@
             background: #f8f9fa;
         }
 
-        .api-input-box {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .api-input-box h3 {
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .api-input-box p {
-            margin-bottom: 15px;
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .api-input-box code {
-            background: #f1f3f5;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-
         .search-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -371,6 +343,18 @@
             background: #e8f5e9;
         }
 
+        .average-item.uts-item {
+            background: #e3f2fd;
+        }
+
+        .average-item.uas-item {
+            background: #fce4ec;
+        }
+
+        .average-item.total-item {
+            background: #fff9c4;
+        }
+
         .average-label {
             font-size: 10px;
             color: #666;
@@ -393,78 +377,16 @@
             color: #1b5e20;
         }
 
-        .table-container {
-            display: none;
+        .average-item.uts-item .average-value {
+            color: #1565c0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 100%;
-            font-size: 12px;
+        .average-item.uas-item .average-value {
+            color: #c2185b;
         }
 
-        @media (min-width: 1024px) {
-            table {
-                min-width: 1200px;
-                font-size: 14px;
-            }
-        }
-
-        thead {
-            background: #667eea;
-            color: white;
-        }
-
-        th, td {
-            padding: 10px 6px;
-            text-align: center;
-            font-size: 11px;
-        }
-
-        @media (min-width: 768px) {
-            th, td {
-                padding: 12px 8px;
-                font-size: 12px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            th, td {
-                font-size: 13px;
-            }
-        }
-
-        th {
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            th {
-                font-size: 11px;
-                letter-spacing: 0.5px;
-            }
-        }
-
-        td.text-left {
-            text-align: left;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #e0e0e0;
-            transition: background 0.2s;
-        }
-
-        tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        tbody tr:last-child {
-            border-bottom: none;
+        .average-item.total-item .average-value {
+            color: #f57f17;
         }
 
         .no-results {
@@ -478,53 +400,6 @@
             height: 80px;
             margin-bottom: 20px;
             opacity: 0.3;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 600;
-            background: #e3f2fd;
-            color: #1976d2;
-            white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            .badge {
-                padding: 4px 12px;
-                font-size: 12px;
-            }
-        }
-
-        .score {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .score-high {
-            color: #2e7d32;
-        }
-
-        .score-medium {
-            color: #f57c00;
-        }
-
-        .score-low {
-            color: #c62828;
-        }
-
-        .rata-rata {
-            background: #fff3e0;
-            font-weight: 700;
-            color: #e65100;
-        }
-
-        .jumlah-rata {
-            background: #e8f5e9;
-            font-weight: 700;
-            color: #1b5e20;
         }
 
         .loading {
@@ -566,13 +441,6 @@
             border: 1px solid #f5c6cb;
         }
 
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        /* Pagination Styles */
         .pagination-container {
             display: flex;
             flex-direction: column;
@@ -669,13 +537,6 @@
             .results-count {
                 font-size: 14px;
             }
-            
-            td.text-left {
-                max-width: 120px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
 
             .pagination a {
                 min-width: 38px;
@@ -728,7 +589,6 @@
                     <span class="search-icon">📖</span>
                 </div>
                 <div class="search-box">
-                    <!-- Kosong untuk menjaga layout grid -->
                 </div>
             </div>
             <div class="button-group">
@@ -758,25 +618,19 @@
     </div>
 
     <script>
-        // ========== KONFIGURASI PERMANEN ==========
-        // Ganti nilai di bawah ini dengan API Key dan Spreadsheet ID Anda
         const CONFIG = {
-            apiKey: 'AIzaSyCg6rmcWOhkfEfPNr4qblqSMe1vq7GKIkQ',  // Ganti dengan API Key Anda
-            spreadsheetId: '1PfPD5nyu8n5MvDp5AOsHjf6K7Ofkh1NicbpNuv85AUU',  // Ganti dengan Spreadsheet ID Anda
-            sheetName: 'rekap_all'  // Ganti dengan nama sheet Anda
+            apiKey: 'AIzaSyCg6rmcWOhkfEfPNr4qblqSMe1vq7GKIkQ',
+            spreadsheetId: '1PfPD5nyu8n5MvDp5AOsHjf6K7Ofkh1NicbpNuv85AUU',
+            sheetName: 'rekap_all'
         };
-        // =========================================
 
         let studentsData = [];
         let currentData = [];
         let dataLoaded = false;
-        let dataDisplayed = false; // Tambahkan flag untuk melacak apakah data sudah ditampilkan
-        
-        // Pagination variables
+        let dataDisplayed = false;
         let currentPage = 1;
-        const itemsPerPage = 12; // Jumlah item per halaman
+        const itemsPerPage = 12;
 
-        // Fungsi untuk menampilkan alert
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertBox');
             alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
@@ -785,7 +639,6 @@
             }, 5000);
         }
 
-        // Fungsi untuk parsing data dari Google Sheets API v4
         function parseGoogleSheetsAPIData(data) {
             try {
                 if (!data.values || data.values.length < 2) {
@@ -795,7 +648,6 @@
                 const rows = data.values;
                 const students = [];
 
-                // Skip header row (index 0)
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i];
                     if (!row || !row[0]) continue;
@@ -814,7 +666,12 @@
                         ulangan2: parseFloat(row[10]) || 0,
                         ulangan3: parseFloat(row[11]) || 0,
                         ulangan4: parseFloat(row[12]) || 0,
-                        ulangan5: parseFloat(row[13]) || 0
+                        ulangan5: parseFloat(row[13]) || 0,
+                        ratarata_ulangan: parseFloat(row[14]) || 0,
+                        ratarata_tugas: parseFloat(row[15]) || 0,
+                        uts: parseFloat(row[16]) || 0,
+                        uas: parseFloat(row[17]) || 0,
+                        total_nilai: parseFloat(row[18]) || 0
                     };
                     students.push(student);
                 }
@@ -826,20 +683,18 @@
             }
         }
 
-        // Fungsi untuk memuat data dari Google Sheets API
         async function loadDataFromAPI() {
-            // Gunakan konfigurasi permanen
             const apiKey = CONFIG.apiKey;
             const sheetId = CONFIG.spreadsheetId;
             const sheetName = CONFIG.sheetName;
             
             if (!apiKey || apiKey === 'AIzaSyBOTI_YOUR_API_KEY_HERE') {
-                showAlert('❌ API Key belum dikonfigurasi! Silakan edit file HTML dan isi CONFIG.apiKey', 'error');
+                showAlert('❌ API Key belum dikonfigurasi!', 'error');
                 return;
             }
 
             if (!sheetId || sheetId.includes('YOUR_SPREADSHEET_ID')) {
-                showAlert('❌ Spreadsheet ID belum dikonfigurasi! Silakan edit file HTML dan isi CONFIG.spreadsheetId', 'error');
+                showAlert('❌ Spreadsheet ID belum dikonfigurasi!', 'error');
                 return;
             }
 
@@ -847,8 +702,7 @@
             alertBox.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Memuat data dari spreadsheet...</p></div>';
 
             try {
-                // Gunakan Google Sheets API v4
-                const range = `${sheetName}!A:N`; // Kolom A sampai N (NIS sampai Ulangan5)
+                const range = `${sheetName}!A:S`;
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
                 
                 const response = await fetch(url);
@@ -865,13 +719,11 @@
                     studentsData = parsedData;
                     currentData = [...studentsData];
                     dataLoaded = true;
-                    dataDisplayed = false; // Reset flag data ditampilkan
+                    dataDisplayed = false;
                     
-                    // Populate dropdowns
                     populateKelasDropdown();
                     populateMapelDropdown();
                     
-                    // Enable search controls
                     document.getElementById('searchNIS').disabled = false;
                     document.getElementById('searchKelas').disabled = false;
                     document.getElementById('searchMapel').disabled = false;
@@ -880,37 +732,22 @@
                     
                     showAlert(`✅ Berhasil memuat ${studentsData.length} data siswa! Klik "Tampilkan Data" untuk melihat hasilnya.`, 'success');
                     
-                    // Reset pagination
                     currentPage = 1;
                 } else {
-                    showAlert('❌ Tidak ada data yang ditemukan atau format tidak sesuai!', 'error');
+                    showAlert('❌ Tidak ada data yang ditemukan!', 'error');
                 }
             } catch (error) {
                 console.error('Error loading data:', error);
-                let errorMessage = '❌ Gagal memuat data. ';
-                
-                if (error.message.includes('API key not valid')) {
-                    errorMessage += 'API Key tidak valid!';
-                } else if (error.message.includes('not found')) {
-                    errorMessage += 'Spreadsheet tidak ditemukan. Pastikan ID benar dan spreadsheet dapat diakses publik!';
-                } else if (error.message.includes('permission')) {
-                    errorMessage += 'Tidak ada akses. Pastikan spreadsheet di-share sebagai "Anyone with the link can view"!';
-                } else {
-                    errorMessage += error.message;
-                }
-                
-                showAlert(errorMessage, 'error');
+                showAlert('❌ Gagal memuat data: ' + error.message, 'error');
             }
         }
 
-        // Fungsi untuk mengisi dropdown kelas
         function populateKelasDropdown() {
             const kelasSet = new Set(studentsData.map(s => s.kelas));
             const selectKelas = document.getElementById('searchKelas');
             
             selectKelas.innerHTML = '<option value="">Semua Kelas</option>';
             
-            // Sort kelas alphabetically
             const sortedKelas = Array.from(kelasSet).sort();
             
             sortedKelas.forEach(kelas => {
@@ -921,14 +758,12 @@
             });
         }
 
-        // Fungsi untuk mengisi dropdown mapel
         function populateMapelDropdown() {
             const mapelSet = new Set(studentsData.map(s => s.mapel.toLowerCase()));
             const selectMapel = document.getElementById('searchMapel');
             
             selectMapel.innerHTML = '<option value="">Semua Mata Pelajaran</option>';
             
-            // Sort mapel alphabetically
             const sortedMapel = Array.from(mapelSet).sort();
             
             sortedMapel.forEach(mapel => {
@@ -939,40 +774,31 @@
             });
         }
 
-        // Fungsi untuk menghitung rata-rata
         function hitungRataRata(nilai1, nilai2, nilai3, nilai4, nilai5) {
             return ((nilai1 + nilai2 + nilai3 + nilai4 + nilai5) / 5).toFixed(2);
         }
 
-        // Fungsi untuk mendapatkan kelas warna berdasarkan nilai
         function getScoreClass(score) {
             if (score >= 85) return 'score-high';
             if (score >= 70) return 'score-medium';
             return 'score-low';
         }
 
-        // Fungsi untuk membuat pagination
         function renderPagination(totalItems) {
             const paginationContainer = document.getElementById('paginationContainer');
             const pagination = document.getElementById('pagination');
             const paginationInfo = document.getElementById('paginationInfo');
             
-            // Hitung total halaman
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             
-            // Jika hanya ada satu halaman atau tidak ada data, sembunyikan pagination
             if (totalPages <= 1) {
                 paginationContainer.style.display = 'none';
                 return;
             }
             
-            // Tampilkan pagination
             paginationContainer.style.display = 'flex';
-            
-            // Kosongkan pagination
             pagination.innerHTML = '';
             
-            // Previous button
             const prevLi = document.createElement('li');
             const prevLink = document.createElement('a');
             prevLink.href = '#';
@@ -990,7 +816,6 @@
             prevLi.appendChild(prevLink);
             pagination.appendChild(prevLi);
             
-            // Page numbers
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + 4);
             
@@ -1063,7 +888,6 @@
                 pagination.appendChild(lastLi);
             }
             
-            // Next button
             const nextLi = document.createElement('li');
             const nextLink = document.createElement('a');
             nextLink.href = '#';
@@ -1079,15 +903,13 @@
                 }
             });
             nextLi.appendChild(nextLink);
-            pagination.appendChild(nextLink);
+            pagination.appendChild(nextLi);
             
-            // Update pagination info
             const startItem = (currentPage - 1) * itemsPerPage + 1;
             const endItem = Math.min(currentPage * itemsPerPage, totalItems);
             paginationInfo.innerHTML = `Menampilkan <strong>${startItem}-${endItem}</strong> dari <strong>${totalItems}</strong> data`;
         }
 
-        // Render cards
         function renderTable(data) {
             const cardsContainer = document.getElementById('cardsContainer');
             const noResults = document.getElementById('noResults');
@@ -1104,7 +926,6 @@
                 return;
             }
 
-            // Hitung data untuk halaman saat ini
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = Math.min(startIndex + itemsPerPage, data.length);
             const paginatedData = data.slice(startIndex, endIndex);
@@ -1112,10 +933,10 @@
             noResults.style.display = 'none';
             resultsCount.textContent = `Menampilkan ${data.length} data`;
 
-            cardsContainer.innerHTML = paginatedData.map((student, index) => {
-                const rataUlangan = hitungRataRata(student.ulangan1, student.ulangan2, student.ulangan3, student.ulangan4, student.ulangan5);
-                const rataTugas = hitungRataRata(student.tugas1, student.tugas2, student.tugas3, student.tugas4, student.tugas5);
-                const jumlahRata = ((parseFloat(rataUlangan) + parseFloat(rataTugas)) / 2).toFixed(2);
+            cardsContainer.innerHTML = paginatedData.map((student) => {
+                const rataUlangan = Math.round(student.ratarata_ulangan);
+                const rataTugas = Math.round(student.ratarata_tugas);
+                const jumlahRata = Math.round((parseFloat(student.ratarata_ulangan) + parseFloat(student.ratarata_tugas)) / 2);
 
                 return `
                 <div class="student-card">
@@ -1185,27 +1006,40 @@
                     </div>
                     
                     <div class="card-averages">
-                        <div class="average-item rata-ulangan">
-                            <div class="average-label">Rata² Ulangan</div>
-                            <div class="average-value">${rataUlangan}</div>
-                        </div>
                         <div class="average-item rata-tugas">
                             <div class="average-label">Rata² Tugas</div>
                             <div class="average-value">${rataTugas}</div>
+                        </div>
+                        <div class="average-item rata-ulangan">
+                            <div class="average-label">Rata² Ulangan</div>
+                            <div class="average-value">${rataUlangan}</div>
                         </div>
                         <div class="average-item jumlah-rata">
                             <div class="average-label">Jumlah Rata²</div>
                             <div class="average-value">${jumlahRata}</div>
                         </div>
                     </div>
+                    
+                    <div class="card-averages" style="margin-top: 10px; padding-top: 0; border-top: none;">
+                        <div class="average-item uts-item">
+                            <div class="average-label">UTS</div>
+                            <div class="average-value">${student.uts}</div>
+                        </div>
+                        <div class="average-item uas-item">
+                            <div class="average-label">UAS</div>
+                            <div class="average-value">${student.uas}</div>
+                        </div>
+                        <div class="average-item total-item">
+                            <div class="average-label">Total Nilai</div>
+                            <div class="average-value">${student.total_nilai}</div>
+                        </div>
+                    </div>
                 </div>
                 `}).join('');
                 
-            // Render pagination
             renderPagination(data.length);
         }
 
-        // Fungsi pencarian dan tampilkan data
         function searchData() {
             if (!dataLoaded) {
                 showAlert('❌ Silakan muat data terlebih dahulu!', 'error');
@@ -1223,40 +1057,29 @@
                 return matchNIS && matchKelas && matchMapel;
             });
 
-            // Reset ke halaman pertama saat melakukan pencarian baru
             currentPage = 1;
-            
-            // Tampilkan data
             dataDisplayed = true;
             renderTable(currentData);
         }
 
-        // Fungsi reset
         function resetSearch() {
             document.getElementById('searchNIS').value = '';
             document.getElementById('searchKelas').value = '';
             document.getElementById('searchMapel').value = '';
             if (dataLoaded) {
                 currentData = [...studentsData];
-                currentPage = 1; // Reset ke halaman pertama
+                currentPage = 1;
                 
-                // Jika data sudah ditampilkan sebelumnya, tampilkan kembali
                 if (dataDisplayed) {
                     renderTable(currentData);
                 }
             }
         }
 
-        // Event listener untuk Enter key
         document.getElementById('searchNIS').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchData();
             }
-        });
-
-        // Jalankan saat halaman dimuat
-        window.addEventListener('DOMContentLoaded', function() {
-            // Tidak auto load data saat halaman dibuka
         });
     </script>
 </body>
