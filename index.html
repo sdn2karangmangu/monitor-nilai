@@ -5,567 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Rekap Nilai Kelas</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            opacity: 0.9;
-        }
-
-        .search-section {
-            padding: 30px;
-            background: #f8f9fa;
-        }
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .search-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .search-box input,
-        .search-box select {
-            width: 100%;
-            padding: 12px 40px 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus,
-        .search-box select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 12px;
-            top: 42px;
-            color: #999;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-load {
-            background: #28a745;
-            color: white;
-            flex: 1;
-        }
-
-        .btn-load:hover:not(:disabled) {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .btn-search {
-            background: #667eea;
-            color: white;
-            flex: 1;
-        }
-
-        .btn-search:hover:not(:disabled) {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-reset {
-            background: #f1f3f5;
-            color: #495057;
-            padding: 12px 20px;
-        }
-
-        .btn-reset:hover:not(:disabled) {
-            background: #e9ecef;
-        }
-
-        .results-section {
-            padding: 30px;
-            display: none;
-        }
-
-        .results-section.show {
-            display: block;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .results-count {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .student-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .student-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f1f3f5;
-        }
-
-        .card-title {
-            flex: 1;
-        }
-
-        .card-nis {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .card-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin: 0;
-        }
-
-        .card-meta {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .card-kelas {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .card-mapel {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            background: #f3e5f5;
-            color: #7b1fa2;
-            text-transform: uppercase;
-        }
-
-        .card-scores {
-            margin-top: 15px;
-        }
-
-        .score-section {
-            margin-bottom: 15px;
-        }
-
-        .score-section-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-
-        .score-item {
-            text-align: center;
-        }
-
-        .score-label {
-            font-size: 10px;
-            color: #999;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .score-value {
-            font-size: 16px;
-            font-weight: 700;
-            padding: 8px;
-            border-radius: 8px;
-            background: #f8f9fa;
-        }
-
-        .score-value.score-high {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .score-value.score-medium {
-            background: #fff3e0;
-            color: #f57c00;
-        }
-
-        .score-value.score-low {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .card-averages {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #f1f3f5;
-        }
-
-        .average-item {
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-        }
-
-        .average-item.rata-ulangan {
-            background: #fff3e0;
-        }
-
-        .average-item.rata-tugas {
-            background: #fff3e0;
-        }
-
-        .average-item.jumlah-rata {
-            background: #e8f5e9;
-        }
-
-        .average-item.uts-item {
-            background: #e3f2fd;
-        }
-
-        .average-item.uas-item {
-            background: #fce4ec;
-        }
-
-        .average-item.total-item {
-            background: #fff9c4;
-        }
-
-        .average-label {
-            font-size: 10px;
-            color: #666;
-            margin-bottom: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .average-value {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .average-item.rata-ulangan .average-value,
-        .average-item.rata-tugas .average-value {
-            color: #e65100;
-        }
-
-        .average-item.jumlah-rata .average-value {
-            color: #1b5e20;
-        }
-
-        .average-item.uts-item .average-value {
-            color: #1565c0;
-        }
-
-        .average-item.uas-item .average-value {
-            color: #c2185b;
-        }
-
-        .average-item.total-item .average-value {
-            color: #f57f17;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .no-results svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #667eea;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .pagination-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 30px 0;
-        }
-
-        .pagination {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 0 0 15px 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            background: white;
-        }
-
-        .pagination li {
-            display: flex;
-        }
-
-        .pagination a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 45px;
-            height: 45px;
-            padding: 0 12px;
-            color: #667eea;
-            background: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border-right: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-
-        .pagination li:first-child a {
-            border-top-left-radius: 12px;
-            border-bottom-left-radius: 12px;
-        }
-
-        .pagination li:last-child a {
-            border-top-right-radius: 12px;
-            border-bottom-right-radius: 12px;
-            border-right: none;
-        }
-
-        .pagination a:hover:not(.active):not(.disabled) {
-            background: #f8f9ff;
-            color: #5568d3;
-        }
-
-        .pagination a.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .pagination a.disabled {
-            color: #ccc;
-            cursor: not-allowed;
-            background: #f8f9fa;
-        }
-
-        .pagination-info {
-            color: #666;
-            font-size: 14px;
-            font-weight: 500;
-            background: #f8f9fa;
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        .pagination-info strong {
-            color: #667eea;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .button-group {
-                flex-direction: column;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-            
-            .results-section {
-                padding: 15px;
-            }
-            
-            .results-count {
-                font-size: 14px;
-            }
-
-            .pagination a {
-                min-width: 38px;
-                height: 38px;
-                padding: 0 8px;
-                font-size: 12px;
-            }
-
-            .pagination-info {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .search-section { padding: 30px; background: #f8f9fa; }
+        .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        @media (max-width: 768px) { .search-grid { grid-template-columns: 1fr; } }
+        .search-box { position: relative; }
+        .search-box label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .search-box input, .search-box select { width: 100%; padding: 12px 40px 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s; }
+        .search-box input:focus, .search-box select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        .search-icon { position: absolute; right: 12px; top: 42px; color: #999; }
+        .button-group { display: flex; gap: 10px; }
+        button { padding: 12px 25px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-load { background: #28a745; color: white; flex: 1; }
+        .btn-load:hover:not(:disabled) { background: #218838; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3); }
+        .btn-search { background: #667eea; color: white; flex: 1; }
+        .btn-search:hover:not(:disabled) { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3); }
+        .btn-reset { background: #f1f3f5; color: #495057; padding: 12px 20px; }
+        .btn-reset:hover:not(:disabled) { background: #e9ecef; }
+        .results-section { padding: 30px; display: none; }
+        .results-section.show { display: block; }
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .results-count { font-size: 18px; font-weight: 600; color: #333; }
+        .cards-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        @media (max-width: 768px) { .cards-container { grid-template-columns: 1fr; } }
+        .student-card { background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
+        .student-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15); border-color: #667eea; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #f1f3f5; }
+        .card-title { flex: 1; }
+        .card-nis { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .card-name { font-size: 18px; font-weight: 700; color: #333; margin: 0; }
+        .card-meta { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+        .card-kelas { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #e3f2fd; color: #1976d2; }
+        .card-semester { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #fff3e0; color: #e65100; }
+        .card-mapel { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #f3e5f5; color: #7b1fa2; text-transform: uppercase; }
+        .card-scores { margin-top: 15px; }
+        .score-section { margin-bottom: 15px; }
+        .score-section-title { font-size: 12px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .score-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .score-item { text-align: center; }
+        .score-label { font-size: 10px; color: #999; margin-bottom: 4px; font-weight: 600; }
+        .score-value { font-size: 16px; font-weight: 700; padding: 8px; border-radius: 8px; background: #f8f9fa; }
+        .score-value.score-high { background: #e8f5e9; color: #2e7d32; }
+        .score-value.score-medium { background: #fff3e0; color: #f57c00; }
+        .score-value.score-low { background: #ffebee; color: #c62828; }
+        .card-averages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 2px solid #f1f3f5; }
+        .average-item { text-align: center; padding: 12px; border-radius: 10px; }
+        .average-item.rata-ulangan { background: #fff3e0; }
+        .average-item.rata-tugas { background: #fff3e0; }
+        .average-item.jumlah-rata { background: #e8f5e9; }
+        .average-item.uts-item { background: #e3f2fd; }
+        .average-item.uas-item { background: #fce4ec; }
+        .average-item.total-item { background: #fff9c4; }
+        .average-label { font-size: 10px; color: #666; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
+        .average-value { font-size: 20px; font-weight: 700; }
+        .average-item.rata-ulangan .average-value, .average-item.rata-tugas .average-value { color: #e65100; }
+        .average-item.jumlah-rata .average-value { color: #1b5e20; }
+        .average-item.uts-item .average-value { color: #1565c0; }
+        .average-item.uas-item .average-value { color: #c2185b; }
+        .average-item.total-item .average-value { color: #f57f17; }
+        .no-results { text-align: center; padding: 60px 20px; color: #999; }
+        .no-results svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3; }
+        .loading { text-align: center; padding: 40px; color: #667eea; }
+        .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .pagination-container { display: flex; flex-direction: column; align-items: center; margin: 30px 0; }
+        .pagination { display: flex; list-style: none; padding: 0; margin: 0 0 15px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); background: white; }
+        .pagination li { display: flex; }
+        .pagination a { display: flex; align-items: center; justify-content: center; min-width: 45px; height: 45px; padding: 0 12px; color: #667eea; background: white; text-decoration: none; font-weight: 600; transition: all 0.3s; border-right: 1px solid #f0f0f0; font-size: 14px; }
+        .pagination li:first-child a { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        .pagination li:last-child a { border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-right: none; }
+        .pagination a:hover:not(.active):not(.disabled) { background: #f8f9ff; color: #5568d3; }
+        .pagination a.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); }
+        .pagination a.disabled { color: #ccc; cursor: not-allowed; background: #f8f9fa; }
+        .pagination-info { color: #666; font-size: 14px; font-weight: 500; background: #f8f9fa; padding: 8px 16px; border-radius: 20px; }
+        .pagination-info strong { color: #667eea; font-weight: 700; }
+        @media (max-width: 768px) { .button-group { flex-direction: column; } .header h1 { font-size: 22px; } .results-section { padding: 15px; } .results-count { font-size: 14px; } .pagination a { min-width: 38px; height: 38px; padding: 0 8px; font-size: 12px; } .pagination-info { font-size: 12px; padding: 6px 12px; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>📚 Aplikasi Rekap Nilai Kelas</h1>
-            <p>Cari data siswa berdasarkan NIS, Kelas, dan Mata Pelajaran</p>
+            <p>Cari data siswa berdasarkan NIS, Kelas, Semester, dan Mata Pelajaran</p>
         </div>
-
         <div class="search-section">
             <div id="alertBox"></div>
-
             <div class="button-group" style="margin-bottom: 20px;">
                 <button class="btn-load" onclick="loadDataFromAPI()">📥 Muat Data dari Spreadsheet</button>
             </div>
-
             <div class="search-grid">
                 <div class="search-box">
                     <label for="searchNIS">Nomor Induk Siswa (NIS)</label>
@@ -574,21 +110,20 @@
                 </div>
                 <div class="search-box">
                     <label for="searchKelas">Kelas</label>
-                    <select id="searchKelas" disabled>
-                        <option value="">Semua Kelas</option>
-                    </select>
+                    <select id="searchKelas" disabled><option value="">Semua Kelas</option></select>
                     <span class="search-icon">👥</span>
                 </div>
             </div>
             <div class="search-grid">
                 <div class="search-box">
-                    <label for="searchMapel">Mata Pelajaran</label>
-                    <select id="searchMapel" disabled>
-                        <option value="">Semua Mata Pelajaran</option>
-                    </select>
-                    <span class="search-icon">📖</span>
+                    <label for="searchSemester">Semester</label>
+                    <select id="searchSemester" disabled><option value="">Semua Semester</option></select>
+                    <span class="search-icon">📅</span>
                 </div>
                 <div class="search-box">
+                    <label for="searchMapel">Mata Pelajaran</label>
+                    <select id="searchMapel" disabled><option value="">Semua Mata Pelajaran</option></select>
+                    <span class="search-icon">📖</span>
                 </div>
             </div>
             <div class="button-group">
@@ -596,491 +131,36 @@
                 <button class="btn-reset" onclick="resetSearch()" disabled id="btnReset">↺ Reset</button>
             </div>
         </div>
-
         <div class="results-section" id="resultsSection">
-            <div class="results-header">
-                <div class="results-count" id="resultsCount"></div>
-            </div>
-            <div class="cards-container" id="cardsContainer">
-            </div>
+            <div class="results-header"><div class="results-count" id="resultsCount"></div></div>
+            <div class="cards-container" id="cardsContainer"></div>
             <div class="pagination-container" id="paginationContainer" style="display: none;">
                 <ul class="pagination" id="pagination"></ul>
                 <div class="pagination-info" id="paginationInfo"></div>
             </div>
             <div id="noResults" class="no-results" style="display: none;">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <h3>Data Tidak Ditemukan</h3>
                 <p>Tidak ada data yang sesuai dengan pencarian Anda</p>
             </div>
         </div>
     </div>
-
     <script>
-        const CONFIG = {
-            apiKey: 'AIzaSyCg6rmcWOhkfEfPNr4qblqSMe1vq7GKIkQ',
-            spreadsheetId: '1PfPD5nyu8n5MvDp5AOsHjf6K7Ofkh1NicbpNuv85AUU',
-            sheetName: 'rekap_all'
-        };
-
-        let studentsData = [];
-        let currentData = [];
-        let dataLoaded = false;
-        let dataDisplayed = false;
-        let currentPage = 1;
+        const CONFIG = {apiKey: 'AIzaSyCg6rmcWOhkfEfPNr4qblqSMe1vq7GKIkQ', spreadsheetId: '1PfPD5nyu8n5MvDp5AOsHjf6K7Ofkh1NicbpNuv85AUU', sheetName: 'rekap_all'};
+        let studentsData = [], currentData = [], dataLoaded = false, dataDisplayed = false, currentPage = 1;
         const itemsPerPage = 12;
-
-        function showAlert(message, type) {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-            setTimeout(() => {
-                alertBox.innerHTML = '';
-            }, 5000);
-        }
-
-        function parseGoogleSheetsAPIData(data) {
-            try {
-                if (!data.values || data.values.length < 2) {
-                    return null;
-                }
-
-                const rows = data.values;
-                const students = [];
-
-                for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (!row || !row[0]) continue;
-
-                    const student = {
-                        nis: row[0]?.toString() || '',
-                        nama: row[1] || '',
-                        kelas: row[2] || '',
-                        mapel: row[3] || '',
-                        tugas1: parseFloat(row[4]) || 0,
-                        tugas2: parseFloat(row[5]) || 0,
-                        tugas3: parseFloat(row[6]) || 0,
-                        tugas4: parseFloat(row[7]) || 0,
-                        tugas5: parseFloat(row[8]) || 0,
-                        ulangan1: parseFloat(row[9]) || 0,
-                        ulangan2: parseFloat(row[10]) || 0,
-                        ulangan3: parseFloat(row[11]) || 0,
-                        ulangan4: parseFloat(row[12]) || 0,
-                        ulangan5: parseFloat(row[13]) || 0,
-                        ratarata_ulangan: parseFloat(row[14]) || 0,
-                        ratarata_tugas: parseFloat(row[15]) || 0,
-                        uts: parseFloat(row[16]) || 0,
-                        uas: parseFloat(row[17]) || 0,
-                        total_nilai: parseFloat(row[18]) || 0
-                    };
-                    students.push(student);
-                }
-
-                return students;
-            } catch (error) {
-                console.error('Error parsing data:', error);
-                return null;
-            }
-        }
-
-        async function loadDataFromAPI() {
-            const apiKey = CONFIG.apiKey;
-            const sheetId = CONFIG.spreadsheetId;
-            const sheetName = CONFIG.sheetName;
-            
-            if (!apiKey || apiKey === 'AIzaSyBOTI_YOUR_API_KEY_HERE') {
-                showAlert('❌ API Key belum dikonfigurasi!', 'error');
-                return;
-            }
-
-            if (!sheetId || sheetId.includes('YOUR_SPREADSHEET_ID')) {
-                showAlert('❌ Spreadsheet ID belum dikonfigurasi!', 'error');
-                return;
-            }
-
-            const alertBox = document.getElementById('alertBox');
-            alertBox.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Memuat data dari spreadsheet...</p></div>';
-
-            try {
-                const range = `${sheetName}!A:S`;
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-                
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error.message || 'Gagal mengambil data');
-                }
-                
-                const data = await response.json();
-                const parsedData = parseGoogleSheetsAPIData(data);
-                
-                if (parsedData && parsedData.length > 0) {
-                    studentsData = parsedData;
-                    currentData = [...studentsData];
-                    dataLoaded = true;
-                    dataDisplayed = false;
-                    
-                    populateKelasDropdown();
-                    populateMapelDropdown();
-                    
-                    document.getElementById('searchNIS').disabled = false;
-                    document.getElementById('searchKelas').disabled = false;
-                    document.getElementById('searchMapel').disabled = false;
-                    document.getElementById('btnSearch').disabled = false;
-                    document.getElementById('btnReset').disabled = false;
-                    
-                    showAlert(`✅ Berhasil memuat ${studentsData.length} data siswa! Klik "Tampilkan Data" untuk melihat hasilnya.`, 'success');
-                    
-                    currentPage = 1;
-                } else {
-                    showAlert('❌ Tidak ada data yang ditemukan!', 'error');
-                }
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showAlert('❌ Gagal memuat data: ' + error.message, 'error');
-            }
-        }
-
-        function populateKelasDropdown() {
-            const kelasSet = new Set(studentsData.map(s => s.kelas));
-            const selectKelas = document.getElementById('searchKelas');
-            
-            selectKelas.innerHTML = '<option value="">Semua Kelas</option>';
-            
-            const sortedKelas = Array.from(kelasSet).sort();
-            
-            sortedKelas.forEach(kelas => {
-                const option = document.createElement('option');
-                option.value = kelas;
-                option.textContent = kelas;
-                selectKelas.appendChild(option);
-            });
-        }
-
-        function populateMapelDropdown() {
-            const mapelSet = new Set(studentsData.map(s => s.mapel.toLowerCase()));
-            const selectMapel = document.getElementById('searchMapel');
-            
-            selectMapel.innerHTML = '<option value="">Semua Mata Pelajaran</option>';
-            
-            const sortedMapel = Array.from(mapelSet).sort();
-            
-            sortedMapel.forEach(mapel => {
-                const option = document.createElement('option');
-                option.value = mapel;
-                option.textContent = mapel.toUpperCase();
-                selectMapel.appendChild(option);
-            });
-        }
-
-        function hitungRataRata(nilai1, nilai2, nilai3, nilai4, nilai5) {
-            return ((nilai1 + nilai2 + nilai3 + nilai4 + nilai5) / 5).toFixed(2);
-        }
-
-        function getScoreClass(score) {
-            if (score >= 85) return 'score-high';
-            if (score >= 70) return 'score-medium';
-            return 'score-low';
-        }
-
-        function renderPagination(totalItems) {
-            const paginationContainer = document.getElementById('paginationContainer');
-            const pagination = document.getElementById('pagination');
-            const paginationInfo = document.getElementById('paginationInfo');
-            
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            
-            if (totalPages <= 1) {
-                paginationContainer.style.display = 'none';
-                return;
-            }
-            
-            paginationContainer.style.display = 'flex';
-            pagination.innerHTML = '';
-            
-            const prevLi = document.createElement('li');
-            const prevLink = document.createElement('a');
-            prevLink.href = '#';
-            prevLink.innerHTML = '&laquo;';
-            if (currentPage === 1) {
-                prevLink.classList.add('disabled');
-            }
-            prevLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderTable(currentData);
-                }
-            });
-            prevLi.appendChild(prevLink);
-            pagination.appendChild(prevLi);
-            
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + 4);
-            
-            if (endPage - startPage < 4) {
-                startPage = Math.max(1, endPage - 4);
-            }
-            
-            if (startPage > 1) {
-                const firstLi = document.createElement('li');
-                const firstLink = document.createElement('a');
-                firstLink.href = '#';
-                firstLink.textContent = '1';
-                firstLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = 1;
-                    renderTable(currentData);
-                });
-                firstLi.appendChild(firstLink);
-                pagination.appendChild(firstLi);
-                
-                if (startPage > 2) {
-                    const ellipsisLi = document.createElement('li');
-                    const ellipsisLink = document.createElement('a');
-                    ellipsisLink.href = '#';
-                    ellipsisLink.textContent = '...';
-                    ellipsisLink.classList.add('disabled');
-                    ellipsisLi.appendChild(ellipsisLink);
-                    pagination.appendChild(ellipsisLi);
-                }
-            }
-            
-            for (let i = startPage; i <= endPage; i++) {
-                const pageLi = document.createElement('li');
-                const pageLink = document.createElement('a');
-                pageLink.href = '#';
-                pageLink.textContent = i;
-                if (i === currentPage) {
-                    pageLink.classList.add('active');
-                }
-                pageLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = i;
-                    renderTable(currentData);
-                });
-                pageLi.appendChild(pageLink);
-                pagination.appendChild(pageLi);
-            }
-            
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const ellipsisLi = document.createElement('li');
-                    const ellipsisLink = document.createElement('a');
-                    ellipsisLink.href = '#';
-                    ellipsisLink.textContent = '...';
-                    ellipsisLink.classList.add('disabled');
-                    ellipsisLi.appendChild(ellipsisLink);
-                    pagination.appendChild(ellipsisLi);
-                }
-                
-                const lastLi = document.createElement('li');
-                const lastLink = document.createElement('a');
-                lastLink.href = '#';
-                lastLink.textContent = totalPages;
-                lastLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = totalPages;
-                    renderTable(currentData);
-                });
-                lastLi.appendChild(lastLink);
-                pagination.appendChild(lastLi);
-            }
-            
-            const nextLi = document.createElement('li');
-            const nextLink = document.createElement('a');
-            nextLink.href = '#';
-            nextLink.innerHTML = '&raquo;';
-            if (currentPage === totalPages) {
-                nextLink.classList.add('disabled');
-            }
-            nextLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderTable(currentData);
-                }
-            });
-            nextLi.appendChild(nextLink);
-            pagination.appendChild(nextLi);
-            
-            const startItem = (currentPage - 1) * itemsPerPage + 1;
-            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-            paginationInfo.innerHTML = `Menampilkan <strong>${startItem}-${endItem}</strong> dari <strong>${totalItems}</strong> data`;
-        }
-
-        function renderTable(data) {
-            const cardsContainer = document.getElementById('cardsContainer');
-            const noResults = document.getElementById('noResults');
-            const resultsCount = document.getElementById('resultsCount');
-            const resultsSection = document.getElementById('resultsSection');
-
-            resultsSection.classList.add('show');
-
-            if (data.length === 0) {
-                cardsContainer.innerHTML = '';
-                noResults.style.display = 'block';
-                document.getElementById('paginationContainer').style.display = 'none';
-                resultsCount.textContent = 'Tidak ada data ditemukan';
-                return;
-            }
-
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-            const paginatedData = data.slice(startIndex, endIndex);
-
-            noResults.style.display = 'none';
-            resultsCount.textContent = `Menampilkan ${data.length} data`;
-
-            cardsContainer.innerHTML = paginatedData.map((student) => {
-                const rataUlangan = Math.round(student.ratarata_ulangan);
-                const rataTugas = Math.round(student.ratarata_tugas);
-                const jumlahRata = Math.round((parseFloat(student.ratarata_ulangan) + parseFloat(student.ratarata_tugas)) / 2);
-
-                return `
-                <div class="student-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <span class="card-nis">NIS: ${student.nis}</span>
-                            <h3 class="card-name">${student.nama}</h3>
-                            <div class="card-meta">
-                                <span class="card-kelas">${student.kelas}</span>
-                                <span class="card-mapel">${student.mapel}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-scores">
-                        <div class="score-section">
-                            <div class="score-section-title">📝 Nilai Tugas</div>
-                            <div class="score-grid">
-                                <div class="score-item">
-                                    <div class="score-label">T1</div>
-                                    <div class="score-value ${getScoreClass(student.tugas1)}">${student.tugas1}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">T2</div>
-                                    <div class="score-value ${getScoreClass(student.tugas2)}">${student.tugas2}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">T3</div>
-                                    <div class="score-value ${getScoreClass(student.tugas3)}">${student.tugas3}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">T4</div>
-                                    <div class="score-value ${getScoreClass(student.tugas4)}">${student.tugas4}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">T5</div>
-                                    <div class="score-value ${getScoreClass(student.tugas5)}">${student.tugas5}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="score-section">
-                            <div class="score-section-title">📋 Nilai Ulangan</div>
-                            <div class="score-grid">
-                                <div class="score-item">
-                                    <div class="score-label">U1</div>
-                                    <div class="score-value ${getScoreClass(student.ulangan1)}">${student.ulangan1}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">U2</div>
-                                    <div class="score-value ${getScoreClass(student.ulangan2)}">${student.ulangan2}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">U3</div>
-                                    <div class="score-value ${getScoreClass(student.ulangan3)}">${student.ulangan3}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">U4</div>
-                                    <div class="score-value ${getScoreClass(student.ulangan4)}">${student.ulangan4}</div>
-                                </div>
-                                <div class="score-item">
-                                    <div class="score-label">U5</div>
-                                    <div class="score-value ${getScoreClass(student.ulangan5)}">${student.ulangan5}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-averages">
-                        <div class="average-item rata-tugas">
-                            <div class="average-label">Rata² Tugas</div>
-                            <div class="average-value">${rataTugas}</div>
-                        </div>
-                        <div class="average-item rata-ulangan">
-                            <div class="average-label">Rata² Ulangan</div>
-                            <div class="average-value">${rataUlangan}</div>
-                        </div>
-                        <div class="average-item jumlah-rata">
-                            <div class="average-label">Jumlah Rata²</div>
-                            <div class="average-value">${jumlahRata}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-averages" style="margin-top: 10px; padding-top: 0; border-top: none;">
-                        <div class="average-item uts-item">
-                            <div class="average-label">UTS</div>
-                            <div class="average-value">${student.uts}</div>
-                        </div>
-                        <div class="average-item uas-item">
-                            <div class="average-label">UAS</div>
-                            <div class="average-value">${student.uas}</div>
-                        </div>
-                        <div class="average-item total-item">
-                            <div class="average-label">Total Nilai</div>
-                            <div class="average-value">${student.total_nilai}</div>
-                        </div>
-                    </div>
-                </div>
-                `}).join('');
-                
-            renderPagination(data.length);
-        }
-
-        function searchData() {
-            if (!dataLoaded) {
-                showAlert('❌ Silakan muat data terlebih dahulu!', 'error');
-                return;
-            }
-
-            const searchNIS = document.getElementById('searchNIS').value.toLowerCase().trim();
-            const searchKelas = document.getElementById('searchKelas').value;
-            const searchMapel = document.getElementById('searchMapel').value.toLowerCase();
-
-            currentData = studentsData.filter(student => {
-                const matchNIS = searchNIS === '' || student.nis.toLowerCase().includes(searchNIS);
-                const matchKelas = searchKelas === '' || student.kelas === searchKelas;
-                const matchMapel = searchMapel === '' || student.mapel.toLowerCase() === searchMapel;
-                return matchNIS && matchKelas && matchMapel;
-            });
-
-            currentPage = 1;
-            dataDisplayed = true;
-            renderTable(currentData);
-        }
-
-        function resetSearch() {
-            document.getElementById('searchNIS').value = '';
-            document.getElementById('searchKelas').value = '';
-            document.getElementById('searchMapel').value = '';
-            if (dataLoaded) {
-                currentData = [...studentsData];
-                currentPage = 1;
-                
-                if (dataDisplayed) {
-                    renderTable(currentData);
-                }
-            }
-        }
-
-        document.getElementById('searchNIS').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchData();
-            }
-        });
+        function showAlert(message, type) { document.getElementById('alertBox').innerHTML = `<div class="alert alert-${type}">${message}</div>`; setTimeout(() => document.getElementById('alertBox').innerHTML = '', 5000); }
+        function parseGoogleSheetsAPIData(data) { try { if (!data.values || data.values.length < 2) return null; const rows = data.values, students = []; for (let i = 1; i < rows.length; i++) { const row = rows[i]; if (!row || !row[0]) continue; students.push({nis: row[0]?.toString() || '', nama: row[1] || '', kelas: row[2] || '', semester: row[3] || '', mapel: row[4] || '', tugas1: parseFloat(row[5]) || 0, tugas2: parseFloat(row[6]) || 0, tugas3: parseFloat(row[7]) || 0, tugas4: parseFloat(row[8]) || 0, tugas5: parseFloat(row[9]) || 0, ulangan1: parseFloat(row[10]) || 0, ulangan2: parseFloat(row[11]) || 0, ulangan3: parseFloat(row[12]) || 0, ulangan4: parseFloat(row[13]) || 0, ulangan5: parseFloat(row[14]) || 0, ratarata_ulangan: parseFloat(row[15]) || 0, ratarata_tugas: parseFloat(row[16]) || 0, uts: parseFloat(row[17]) || 0, uas: parseFloat(row[18]) || 0, total_nilai: parseFloat(row[19]) || 0}); } return students; } catch (error) { console.error('Error parsing data:', error); return null; } }
+        async function loadDataFromAPI() { const {apiKey, spreadsheetId, sheetName} = CONFIG; if (!apiKey || apiKey === 'AIzaSyBOTI_YOUR_API_KEY_HERE') { showAlert('❌ API Key belum dikonfigurasi!', 'error'); return; } if (!spreadsheetId || spreadsheetId.includes('YOUR_SPREADSHEET_ID')) { showAlert('❌ Spreadsheet ID belum dikonfigurasi!', 'error'); return; } document.getElementById('alertBox').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Memuat data dari spreadsheet...</p></div>'; try { const range = `${sheetName}!A:T`, url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`, response = await fetch(url); if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error.message || 'Gagal mengambil data'); } const data = await response.json(), parsedData = parseGoogleSheetsAPIData(data); if (parsedData && parsedData.length > 0) { studentsData = parsedData; currentData = [...studentsData]; dataLoaded = true; dataDisplayed = false; populateKelasDropdown(); populateSemesterDropdown(); populateMapelDropdown(); ['searchNIS', 'searchKelas', 'searchSemester', 'searchMapel', 'btnSearch', 'btnReset'].forEach(id => document.getElementById(id).disabled = false); showAlert(`✅ Berhasil memuat ${studentsData.length} data siswa! Klik "Tampilkan Data" untuk melihat hasilnya.`, 'success'); currentPage = 1; } else { showAlert('❌ Tidak ada data yang ditemukan!', 'error'); } } catch (error) { console.error('Error loading data:', error); showAlert('❌ Gagal memuat data: ' + error.message, 'error'); } }
+        function populateKelasDropdown() { const select = document.getElementById('searchKelas'); select.innerHTML = '<option value="">Semua Kelas</option>'; Array.from(new Set(studentsData.map(s => s.kelas))).sort().forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; select.appendChild(o); }); }
+        function populateSemesterDropdown() { const select = document.getElementById('searchSemester'); select.innerHTML = '<option value="">Semua Semester</option>'; Array.from(new Set(studentsData.map(s => s.semester))).sort().forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; select.appendChild(o); }); }
+        function populateMapelDropdown() { const select = document.getElementById('searchMapel'); select.innerHTML = '<option value="">Semua Mata Pelajaran</option>'; Array.from(new Set(studentsData.map(s => s.mapel.toLowerCase()))).sort().forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m.toUpperCase(); select.appendChild(o); }); }
+        function getScoreClass(score) { if (score >= 85) return 'score-high'; if (score >= 70) return 'score-medium'; return 'score-low'; }
+        function renderPagination(totalItems) { const container = document.getElementById('paginationContainer'), pagination = document.getElementById('pagination'), info = document.getElementById('paginationInfo'), totalPages = Math.ceil(totalItems / itemsPerPage); if (totalPages <= 1) { container.style.display = 'none'; return; } container.style.display = 'flex'; pagination.innerHTML = ''; const createLink = (text, page, active = false, disabled = false) => { const li = document.createElement('li'), a = document.createElement('a'); a.href = '#'; a.innerHTML = text; if (active) a.classList.add('active'); if (disabled) a.classList.add('disabled'); a.addEventListener('click', (e) => { e.preventDefault(); if (!disabled && !active) { currentPage = page; renderTable(currentData); } }); li.appendChild(a); return li; }; pagination.appendChild(createLink('&laquo;', currentPage - 1, false, currentPage === 1)); let start = Math.max(1, currentPage - 2), end = Math.min(totalPages, start + 4); if (end - start < 4) start = Math.max(1, end - 4); if (start > 1) { pagination.appendChild(createLink('1', 1)); if (start > 2) pagination.appendChild(createLink('...', 0, false, true)); } for (let i = start; i <= end; i++) pagination.appendChild(createLink(i.toString(), i, i === currentPage)); if (end < totalPages) { if (end < totalPages - 1) pagination.appendChild(createLink('...', 0, false, true)); pagination.appendChild(createLink(totalPages.toString(), totalPages)); } pagination.appendChild(createLink('&raquo;', currentPage + 1, false, currentPage === totalPages)); const startItem = (currentPage - 1) * itemsPerPage + 1, endItem = Math.min(currentPage * itemsPerPage, totalItems); info.innerHTML = `Menampilkan <strong>${startItem}-${endItem}</strong> dari <strong>${totalItems}</strong> data`; }
+        function renderTable(data) { const container = document.getElementById('cardsContainer'), noResults = document.getElementById('noResults'), count = document.getElementById('resultsCount'), section = document.getElementById('resultsSection'); section.classList.add('show'); if (data.length === 0) { container.innerHTML = ''; noResults.style.display = 'block'; document.getElementById('paginationContainer').style.display = 'none'; count.textContent = 'Tidak ada data ditemukan'; return; } const start = (currentPage - 1) * itemsPerPage, end = Math.min(start + itemsPerPage, data.length), paginated = data.slice(start, end); noResults.style.display = 'none'; count.textContent = `Menampilkan ${data.length} data`; container.innerHTML = paginated.map(s => { const ru = Math.round(s.ratarata_ulangan), rt = Math.round(s.ratarata_tugas), jr = Math.round((parseFloat(s.ratarata_ulangan) + parseFloat(s.ratarata_tugas)) / 2); return `<div class="student-card"><div class="card-header"><div class="card-title"><span class="card-nis">NIS: ${s.nis}</span><h3 class="card-name">${s.nama}</h3><div class="card-meta"><span class="card-kelas">${s.kelas}</span><span class="card-semester">${s.semester}</span><span class="card-mapel">${s.mapel}</span></div></div></div><div class="card-scores"><div class="score-section"><div class="score-section-title">📝 Nilai Tugas</div><div class="score-grid"><div class="score-item"><div class="score-label">T1</div><div class="score-value ${getScoreClass(s.tugas1)}">${s.tugas1}</div></div><div class="score-item"><div class="score-label">T2</div><div class="score-value ${getScoreClass(s.tugas2)}">${s.tugas2}</div></div><div class="score-item"><div class="score-label">T3</div><div class="score-value ${getScoreClass(s.tugas3)}">${s.tugas3}</div></div><div class="score-item"><div class="score-label">T4</div><div class="score-value ${getScoreClass(s.tugas4)}">${s.tugas4}</div></div><div class="score-item"><div class="score-label">T5</div><div class="score-value ${getScoreClass(s.tugas5)}">${s.tugas5}</div></div></div></div><div class="score-section"><div class="score-section-title">📋 Nilai Ulangan</div><div class="score-grid"><div class="score-item"><div class="score-label">U1</div><div class="score-value ${getScoreClass(s.ulangan1)}">${s.ulangan1}</div></div><div class="score-item"><div class="score-label">U2</div><div class="score-value ${getScoreClass(s.ulangan2)}">${s.ulangan2}</div></div><div class="score-item"><div class="score-label">U3</div><div class="score-value ${getScoreClass(s.ulangan3)}">${s.ulangan3}</div></div><div class="score-item"><div class="score-label">U4</div><div class="score-value ${getScoreClass(s.ulangan4)}">${s.ulangan4}</div></div><div class="score-item"><div class="score-label">U5</div><div class="score-value ${getScoreClass(s.ulangan5)}">${s.ulangan5}</div></div></div></div></div><div class="card-averages"><div class="average-item rata-tugas"><div class="average-label">Rata² Tugas</div><div class="average-value">${rt}</div></div><div class="average-item rata-ulangan"><div class="average-label">Rata² Ulangan</div><div class="average-value">${ru}</div></div><div class="average-item jumlah-rata"><div class="average-label">Jumlah Rata²</div><div class="average-value">${jr}</div></div></div><div class="card-averages" style="margin-top: 10px; padding-top: 0; border-top: none;"><div class="average-item uts-item"><div class="average-label">UTS</div><div class="average-value">${s.uts}</div></div><div class="average-item uas-item"><div class="average-label">UAS</div><div class="average-value">${s.uas}</div></div><div class="average-item total-item"><div class="average-label">Total Nilai</div><div class="average-value">${s.total_nilai}</div></div></div></div>`; }).join(''); renderPagination(data.length); }
+        function searchData() { if (!dataLoaded) { showAlert('❌ Silakan muat data terlebih dahulu!', 'error'); return; } const nis = document.getElementById('searchNIS').value.toLowerCase().trim(), kelas = document.getElementById('searchKelas').value, semester = document.getElementById('searchSemester').value, mapel = document.getElementById('searchMapel').value.toLowerCase(); currentData = studentsData.filter(s => { const mNIS = nis === '' || s.nis.toLowerCase().includes(nis), mKelas = kelas === '' || s.kelas === kelas, mSemester = semester === '' || s.semester === semester, mMapel = mapel === '' || s.mapel.toLowerCase() === mapel; return mNIS && mKelas && mSemester && mMapel; }); currentPage = 1; dataDisplayed = true; renderTable(currentData); }
+        function resetSearch() { document.getElementById('searchNIS').value = ''; document.getElementById('searchKelas').value = ''; document.getElementById('searchSemester').value = ''; document.getElementById('searchMapel').value = ''; if (dataLoaded) { currentData = [...studentsData]; currentPage = 1; if (dataDisplayed) renderTable(currentData); } }
+        document.getElementById('searchNIS').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchData(); });
     </script>
 </body>
 </html>
