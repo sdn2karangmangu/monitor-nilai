@@ -150,7 +150,113 @@
         let studentsData = [], currentData = [], dataLoaded = false, dataDisplayed = false, currentPage = 1;
         const itemsPerPage = 12;
         function showAlert(message, type) { document.getElementById('alertBox').innerHTML = `<div class="alert alert-${type}">${message}</div>`; setTimeout(() => document.getElementById('alertBox').innerHTML = '', 5000); }
-        function parseGoogleSheetsAPIData(data) { try { if (!data.values || data.values.length < 2) return null; const rows = data.values, students = []; for (let i = 1; i < rows.length; i++) { const row = rows[i]; if (!row || !row[0]) continue; students.push({nis: row[0]?.toString() || '', nama: row[1] || '', kelas: row[2] || '', semester: row[3] || '', mapel: row[4] || '', tugas1: parseFloat(row[5]) || 0, tugas2: parseFloat(row[6]) || 0, tugas3: parseFloat(row[7]) || 0, tugas4: parseFloat(row[8]) || 0, tugas5: parseFloat(row[9]) || 0, ulangan1: parseFloat(row[10]) || 0, ulangan2: parseFloat(row[11]) || 0, ulangan3: parseFloat(row[12]) || 0, ulangan4: parseFloat(row[13]) || 0, ulangan5: parseFloat(row[14]) || 0, ratarata_ulangan: parseFloat(row[15]) || 0, ratarata_tugas: parseFloat(row[16]) || 0, uts: parseFloat(row[17]) || 0, uas: parseFloat(row[18]) || 0, total_nilai: parseFloat(row[19]) || 0}); } return students; } catch (error) { console.error('Error parsing data:', error); return null; } }
+      
+function parseGoogleSheetsAPIData(data) { 
+            try { 
+                if (!data.values || data.values.length < 2) return null; 
+                const rows = data.values, students = []; 
+                
+                console.log('Total rows:', rows.length);
+                console.log('Header row:', rows[0]);
+                console.log('=== CHECKING ROW 1 (ADIFA ASSHALIHA) ===');
+                console.log('Full row[1]:', rows[1]);
+                console.log('Row length:', rows[1]?.length);
+                
+                for (let i = 1; i < rows.length; i++) { 
+                    const row = rows[i]; 
+                    if (!row || !row[0]) continue;
+                    
+                    // Parse nilai tugas (kolom F-J, index 5-9)
+                    const tugas1 = parseFloat(row[5]) || 0;
+                    const tugas2 = parseFloat(row[6]) || 0;
+                    const tugas3 = parseFloat(row[7]) || 0;
+                    const tugas4 = parseFloat(row[8]) || 0;
+                    const tugas5 = parseFloat(row[9]) || 0;
+                    
+                    // Parse nilai ulangan (kolom K-O, index 10-14)
+                    const ulangan1 = parseFloat(row[10]) || 0;
+                    const ulangan2 = parseFloat(row[11]) || 0;
+                    const ulangan3 = parseFloat(row[12]) || 0;
+                    const ulangan4 = parseFloat(row[13]) || 0;
+                    const ulangan5 = parseFloat(row[14]) || 0;
+                    
+                    // Debug: tampilkan raw data untuk ADIFA ASSHALIHA (baris index 1)
+                    if (i === 1 && row[1]?.includes('ADIFA')) {
+                        console.log('=== DEBUGGING ADIFA ROW ===');
+                        console.log('Index [15] P (Ratarata_tugas):', row[15], '-> parsed:', parseFloat(row[15]));
+                        console.log('Index [16] Q (Ratarata_ulangan):', row[16], '-> parsed:', parseFloat(row[16]));
+                        console.log('Index [17] R (Jumlah_Ratarata):', row[17], '-> parsed:', parseFloat(row[17]));
+                        console.log('Index [18] S (UTS):', row[18], '-> parsed:', parseFloat(row[18]));
+                        console.log('Index [19] T (UAS):', row[19], '-> parsed:', parseFloat(row[19]));
+                        console.log('Index [20] U (Total_nilai):', row[20], '-> parsed:', parseFloat(row[20]));
+                    }
+                    
+                    // Ambil nilai dari spreadsheet dengan index yang benar
+                    // Kolom P (index 15) = Ratarata_tugas
+                    const ratarata_tugas = parseFloat(row[15]) || 0;
+                    
+                    // Kolom Q (index 16) = Ratarata_ulangan  
+                    const ratarata_ulangan = parseFloat(row[16]) || 0;
+                    
+                    // Kolom R (index 17) = Jumlah_Ratarata
+                    const jumlah_ratarata = parseFloat(row[17]) || 0;
+                    
+                    // Kolom S (index 18) = UTS
+                    const uts = parseFloat(row[18]) || 0;
+                    
+                    // Kolom T (index 19) = UAS
+                    const uas = parseFloat(row[19]) || 0;
+                    
+                    // Kolom U (index 20) = Total_nilai
+                    // Jika tidak ada di spreadsheet, hitung sendiri
+                    let total_nilai = parseFloat(row[20]) || 0;
+                    
+                    // Jika total_nilai masih 0 atau NaN, hitung berdasarkan rumus
+                    // Total = Rata-rata dari (Ratarata_tugas, Ratarata_ulangan, UTS, UAS)
+                    if (!total_nilai || isNaN(total_nilai)) {
+                        // Hitung rata-rata dari 4 komponen
+                        const komponenNilai = [ratarata_tugas, ratarata_ulangan, uts, uas].filter(v => v > 0);
+                        if (komponenNilai.length > 0) {
+                            total_nilai = komponenNilai.reduce((a, b) => a + b, 0) / komponenNilai.length;
+                            total_nilai = Math.round(total_nilai * 100) / 100;
+                        } else {
+                            total_nilai = 0;
+                        }
+                    }
+                    
+                    if (i <= 3 && (ratarata_tugas > 0 || uts > 0 || total_nilai > 0)) {
+                        console.log(`Row ${i} (${row[1]}): RT=${ratarata_tugas}, RU=${ratarata_ulangan}, UTS=${uts}, UAS=${uas}, Total=${total_nilai} (avg of 4)`);
+                    }
+                    
+                    students.push({
+                        nis: row[0]?.toString() || '', 
+                        nama: row[1] || '', 
+                        kelas: row[2] || '', 
+                        semester: row[3] || '', 
+                        mapel: row[4] || '', 
+                        tugas1, tugas2, tugas3, tugas4, tugas5,
+                        ulangan1, ulangan2, ulangan3, ulangan4, ulangan5,
+                        ratarata_tugas,
+                        ratarata_ulangan,
+                        jumlah_ratarata,
+                        uts, 
+                        uas, 
+                        total_nilai
+                    }); 
+                } 
+                
+                console.log('Parsed students:', students.length);
+                if (students.length > 0) {
+                    console.log('Sample student (ADIFA):', students[0]);
+                }
+                
+                return students; 
+            } catch (error) { 
+                console.error('Error parsing data:', error); 
+                return null; 
+            } 
+        }
+
         async function loadDataFromAPI() { const {apiKey, spreadsheetId, sheetName} = CONFIG; if (!apiKey || apiKey === 'AIzaSyBOTI_YOUR_API_KEY_HERE') { showAlert('❌ API Key belum dikonfigurasi!', 'error'); return; } if (!spreadsheetId || spreadsheetId.includes('YOUR_SPREADSHEET_ID')) { showAlert('❌ Spreadsheet ID belum dikonfigurasi!', 'error'); return; } document.getElementById('alertBox').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Memuat data dari spreadsheet...</p></div>'; try { const range = `${sheetName}!A:T`, url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`, response = await fetch(url); if (!response.ok) { const errorData = await response.json(); throw new Error(errorData.error.message || 'Gagal mengambil data'); } const data = await response.json(), parsedData = parseGoogleSheetsAPIData(data); if (parsedData && parsedData.length > 0) { studentsData = parsedData; currentData = [...studentsData]; dataLoaded = true; dataDisplayed = false; populateKelasDropdown(); populateSemesterDropdown(); populateMapelDropdown(); ['searchNIS', 'searchKelas', 'searchSemester', 'searchMapel', 'btnSearch', 'btnReset'].forEach(id => document.getElementById(id).disabled = false); showAlert(`✅ Berhasil memuat ${studentsData.length} data siswa! Klik "Tampilkan Data" untuk melihat hasilnya.`, 'success'); currentPage = 1; } else { showAlert('❌ Tidak ada data yang ditemukan!', 'error'); } } catch (error) { console.error('Error loading data:', error); showAlert('❌ Gagal memuat data: ' + error.message, 'error'); } }
         function populateKelasDropdown() { const select = document.getElementById('searchKelas'); select.innerHTML = '<option value="">Semua Kelas</option>'; Array.from(new Set(studentsData.map(s => s.kelas))).sort().forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; select.appendChild(o); }); }
         function populateSemesterDropdown() { const select = document.getElementById('searchSemester'); select.innerHTML = '<option value="">Semua Semester</option>'; Array.from(new Set(studentsData.map(s => s.semester))).sort().forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; select.appendChild(o); }); }
