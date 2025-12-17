@@ -207,17 +207,15 @@ function parseGoogleSheetsAPIData(data) {
                     // Kolom T (index 19) = UAS
                     const uas = parseFloat(row[19]) || 0;
                     
-                    // Kolom U (index 20) = Total_nilai
+                     // Kolom U (index 20) = Total_nilai
                     // Jika tidak ada di spreadsheet, hitung sendiri
                     let total_nilai = parseFloat(row[20]) || 0;
                     
                     // Jika total_nilai masih 0 atau NaN, hitung berdasarkan rumus
-                    // Total = Rata-rata dari (Ratarata_tugas, Ratarata_ulangan, UTS, UAS)
+                    // Formula: Total Nilai = (Jumlah_Ratarata × 0.6) + (UTS × 0.2) + (UAS × 0.2)
                     if (!total_nilai || isNaN(total_nilai)) {
-                        // Hitung rata-rata dari 4 komponen
-                        const komponenNilai = [ratarata_tugas, ratarata_ulangan, uts, uas].filter(v => v > 0);
-                        if (komponenNilai.length > 0) {
-                            total_nilai = komponenNilai.reduce((a, b) => a + b, 0) / komponenNilai.length;
+                        if (jumlah_ratarata > 0 || uts > 0 || uas > 0) {
+                            total_nilai = (jumlah_ratarata * 0.6) + (uts * 0.2) + (uas * 0.2);
                             total_nilai = Math.round(total_nilai * 100) / 100;
                         } else {
                             total_nilai = 0;
